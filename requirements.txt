@@ -1,4 +1,5 @@
 agno
+groq
 yfinance
 streamlit
 duckduckgo-search
