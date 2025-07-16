@@ -9,18 +9,26 @@ os.environ["GROQ_API_KEY"] = os.getenv("GROQ_API_KEY")
 swing_agent = Agent(
     model=Groq(id="llama3-8b-8192"),
     tools=[
-        YFinanceTools(stock_price=True,
-                      company_info=True,
-                      analyst_recommendations=True),
+        YFinanceTools(
+            stock_price=True,
+            company_info=True,
+            analyst_recommendations=True
+        ),
         DuckDuckGoTools()
     ],
-    description="Generate 3 daily momentum stock picks with risk scores"
+    description="Daily momentum-stock picker"
 )
 
 def get_picks():
+    today = datetime.date.today()
     prompt = (
-        "Current date: {}. "
-        "Find 3 U.S. stocks showing recent momentum (>5 % 5-day gain or breakout). "
-        "Return: Ticker, Last Close, 1-Mo Avg Target, 0-100 Risk Score, 1-line rationale."
-    ).format(datetime.date.today())
-    return swing_agent.run(prompt).content
+        f"Today is {today}.  "
+        "Use the provided tools to:\n"
+        "1.  Find three Indian tickers that have gained >5 % in the last 5 trading days.\n"
+        "2.  For each ticker obtain:\n"
+        "   - last closing price\n"
+        "   - average 1-month analyst target\n"
+        "   - a 0–100 risk score (based on volatility and news sentiment)\n"
+        "3.  Return a clean markdown table: Ticker | Last Close | 1-Mo Target | Risk | One-line rationale"
+    )
+    return swing_agent.run(prompt, stream=False).content
