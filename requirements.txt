@@ -1,5 +1,4 @@
-Flask==2.0.1
-requests==2.25.1
-python-dotenv==0.17.1
-streamlit==0.87.0
-smtplib==0.1
+agno
+yfinance
+streamlit
+duckduckgo-search
